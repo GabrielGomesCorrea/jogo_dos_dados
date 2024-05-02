@@ -7,11 +7,21 @@
     <link rel="stylesheet" href="jogo.css">
 </head>
 <body>
-    <h1>Jogo dos Dados</h1>
-    Quantas balas você deseja apostar: <input type="number" placeholder="número maior que 0" id="input_balas"><br><br>
-    Seu número da sorte: <input type="number" placeholder="entre 2 e 12" id="input_sorte"><br><br>
-    <button onclick="valendo()">Valendo</button><br>
-    <div id="div_msg"></div>
+    <header>
+        <img src="logo.png" class="logo" alt="">
+        <h1 class="titulo">BET<span>Balas</span></h1>
+        <h4>by Gabriel Gomes</h4>
+    </header>
+    <div class="secao">
+        <div class="aposte">
+            <h2>Aposte e ganhe mais balas!</h2>
+            <p>Quantas balas você deseja apostar:</p> <input type="number" placeholder="número maior que 0" id="input_balas"><br><br>
+            <p>Seu número da sorte:</p> <input type="number" placeholder="entre 2 e 12" id="input_sorte"><br><br>
+            <button onclick="valendo()">Valendo</button><br>
+        </div>
+        <div id="div_msg" class="resultado">
+        </div>
+    </div>
 </body>
 </html>
 <script>
@@ -73,11 +83,11 @@
             }
             if(balas == 0){
                 div_msg.innerHTML += `<br><br>Sua última aposta ficou empatada. Isso é incrível!<br> A probabilidade disso acontecer é muito 
-                pequena`;
+                baixa.`;
             }else if(balas > 0){
-                div_msg.innerHTML += `<br><br>Parabéns!!!<br> Você terminou com saldo a receber.`;
+                div_msg.innerHTML += `<br><br>Parabéns!!!<br> Você terminou com um saldo a receber de ${balas} balas.`;
             }else{
-                div_msg.innerHTML += `<br><br>Você está devendo ${balas} balas.`;
+                div_msg.innerHTML += `<br><br>PERDEU!!!<br> Você está devendo ${balas} balas.`;
             }
         }
     }
