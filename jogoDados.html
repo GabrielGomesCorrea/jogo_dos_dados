@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ptbr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo dos Dados</title>
+    <link rel="stylesheet" href="jogo.css">
+</head>
+<body>
+    <h1>Jogo dos Dados</h1>
+    Quantas balas você deseja apostar: <input type="number" placeholder="número maior que 0" id="input_balas"><br><br>
+    Seu número da sorte: <input type="number" placeholder="entre 2 e 12" id="input_sorte"><br><br>
+    <button onclick="valendo()">Valendo</button><br>
+    <div id="div_msg"></div>
+</body>
+</html>
+<script>
+    function valendo(){
+        div_msg.innerHTML = '';
+
+        var balas = Number(input_balas.value);
+        var acumulado = Number(input_balas.value);
+        var numsorte = Number(input_sorte.value);
+
+        if(balas <=0 && (numsorte < 2 || numsorte > 12)){
+            alert('Insira uma quantidade de balas maior que 0 e um número da sorte entre 2 e 12');
+        }else if(numsorte < 2 || numsorte > 12){
+            alert('Insira um número da sorte entre 2 e 12');
+        }else if(balas <= 0){
+            alert('Insira uma quantidade de balas maior que 0');
+        }else{
+            /*Sortear rodadas*/
+            var intervalo = 20 - 10;
+            var rodada_aleatorio = Math.random();
+
+            var rodada = rodada_aleatorio * intervalo + 10;
+            var rodada_arredondada = rodada.toFixed();
+            var rodada_number = Number(rodada_arredondada);
+
+            alert(`Você foi sorteado(a) com ${rodada_arredondada} rodadas`)
+
+            for(var index = 1; index <= rodada_number; index++){
+                /*Sortear dado 1*/
+                var interv_dado1 = 6 - 1;
+                var dado1_aleatorio = Math.random();
+
+                var dado_um = dado1_aleatorio * interv_dado1 + 1;
+                var dado1 = dado_um.toFixed();
+
+                /*Sortear dado 2*/
+                var interv_dado2 = 6 - 1;
+                var dado2_aleatorio = Math.random();
+
+                var dado_dois = dado2_aleatorio * interv_dado2 + 1;
+                var dado2 = dado_dois.toFixed();
+
+                /*Transformando os dados em String*/
+                var dado1_number = Number(dado1);
+                var dado2_number = Number(dado2);
+
+                /*Comparar os dados*/
+                var dados_somados = dado1_number + dado2_number;
+
+                if(dados_somados == numsorte){
+                    balas = acumulado * 10;
+                    div_msg.innerHTML += `<br><br>Número sorteado do 1º dado: ${dado1_number} - Número sorteado do 2º dado: ${dado2_number}<br>
+                    Você ganhou essa rodada - Seu saldo de balas: ${balas}`;
+                }else{
+                    balas = balas - acumulado;
+                    div_msg.innerHTML += `<br><br>Número sorteado do 1º dado: ${dado1_number} - Número sorteado do 2º dado: ${dado2_number}<br>
+                    Você perdeu essa rodada - Seu saldo de balas: ${balas}`;
+                }
+            }
+            if(balas == 0){
+                div_msg.innerHTML += `<br><br>Sua última aposta ficou empatada. Isso é incrível!<br> A probabilidade disso acontecer é muito 
+                pequena`;
+            }else if(balas > 0){
+                div_msg.innerHTML += `<br><br>Parabéns!!!<br> Você terminou com saldo a receber.`;
+            }else{
+                div_msg.innerHTML += `<br><br>Você está devendo ${balas} balas.`;
+            }
+        }
+    }
+</script>
