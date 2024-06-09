@@ -4,41 +4,72 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jogo dos Dados</title>
-    <link rel="stylesheet" href="jogo.css">
 </head>
 <body>
-    <header>
-        <img src="logo.png" class="logo" alt="">
-        <h1 class="titulo">BET<span>Balas</span></h1>
-        <h4>by Gabriel Gomes</h4>
-    </header>
-    <div class="secao">
+    <div class="secao" style="display: flex;justify-content: space-evenly;">
         <div class="aposte">
             <h2>Aposte e ganhe mais balas!</h2>
             <p>Quantas balas você deseja apostar:</p> <input type="number" placeholder="número maior que 0" id="input_balas"><br><br>
-            <p>Seu número da sorte:</p> <input type="number" placeholder="entre 2 e 12" id="input_sorte"><br><br>
+            <p>Seu 1º número da sorte:</p> <input type="number" placeholder="entre 2 e 12" id="input_sorte1"><br><br>
+            <p>Seu 2º número da sorte:</p> <input type="number" placeholder="entre 2 e 12" id="input_sorte2"><br><br>
+            <p>Seu 3º número da sorte:</p> <input type="number" placeholder="entre 2 e 12" id="input_sorte3"><br><br>
             <button onclick="valendo()">Valendo</button><br>
         </div>
+        <div class="pesquisar">
+            <h2>Pesquisar Rodadas</h2>
+            De: <input type="number" id="input_de"> Até: <input type="number" id="input_ate"><br><br>
+            <button onclick="pesquisar()">Pesquisar</button><br><br>
+            <h2>Pesquisar Dado</h2>
+            <input type="number" id="input_pdado"><br><br>
+            <button onclick="pesquisar_dado()">Pesquisar Dado</button>
+            <div id="div_pesquisa"></div>
+        </div><br>
         <div id="div_msg" class="resultado">
         </div>
     </div>
 </body>
 </html>
 <script>
-    function valendo(){
-        div_msg.innerHTML = '';
+    var lista_numsorte = [];
+    var lista_ndoissorte = [];
+    var lista_ntressorte = [];
+    var lista_dado1 = [];
+    var lista_dado2 = [];
+    var lista_balas = [];
 
+    function valendo(){
         var balas = Number(input_balas.value);
         var acumulado = Number(input_balas.value);
-        var numsorte = Number(input_sorte.value);
+        var numsorte = Number(input_sorte1.value);
+        var ndoissorte = Number(input_sorte2.value);
+        var ntressorte = Number(input_sorte3.value);
 
-        if(balas <=0 && (numsorte < 2 || numsorte > 12)){
+        if(balas <= 0){
+            alert('Insira uma quantidade de balas maior que 0 (zero)');
+        }else if(balas == "" || numsorte == "" || ndoissorte == "" || ntressorte == ""){
+            alert('Preencha todos os campos corretamente');
+        }else if(balas <=0 && (numsorte < 2 || numsorte > 12 || ndoissorte < 2 || ndoissorte > 12 || ntressorte < 2 || ntressorte > 2)){
             alert('Insira uma quantidade de balas maior que 0 e um número da sorte entre 2 e 12');
-        }else if(numsorte < 2 || numsorte > 12){
-            alert('Insira um número da sorte entre 2 e 12');
+        }else if(numsorte < 2 || numsorte > 12 || ndoissorte < 2 || ndoissorte > 12 || ntressorte < 2 || ntressorte > 12){
+            alert('Insira um número da sorte entre 2 e 12 em todos os números da sorte');
         }else if(balas <= 0){
             alert('Insira uma quantidade de balas maior que 0');
         }else{
+            div_msg.innerHTML = '';
+            div_pesquisa.innerHTML = '';
+
+            lista_numsorte = [];
+            lista_ndoissorte = [];
+            lista_ntressorte = [];
+            lista_dado1 = [];
+            lista_dado2 = [];
+            lista_balas = [];
+
+            input_balas.value = '';
+            input_sorte1.value = '';
+            input_sorte2.value = '';
+            input_sorte3.value = '';
+
             /*Sortear rodadas*/
             var intervalo = 20 - 10;
             var rodada_aleatorio = Math.random();
@@ -49,6 +80,7 @@
 
             alert(`Você foi sorteado(a) com ${rodada_arredondada} rodadas`)
 
+            div_msg.innerHTML += `<h3>Sorteios:</h3>`;
             for(var index = 1; index <= rodada_number; index++){
                 /*Sortear dado 1*/
                 var interv_dado1 = 6 - 1;
@@ -71,14 +103,30 @@
                 /*Comparar os dados*/
                 var dados_somados = dado1_number + dado2_number;
 
-                if(dados_somados == numsorte){
-                    balas = acumulado * 10;
-                    div_msg.innerHTML += `<br><br>Número sorteado do 1º dado: ${dado1_number} - Número sorteado do 2º dado: ${dado2_number}<br>
+                if(dados_somados == numsorte || dados_somados == ndoissorte || dados_somados == ntressorte){
+                    balas = acumulado * 5;
+                    div_msg.innerHTML += `<h4>${index}º sorteio:</h4>
+                    Seus números da sorte: ${numsorte}, ${ndoissorte} e ${ntressorte}.<br> Número sorteado do 1º dado: ${dado1_number} - 
+                    Número sorteado do 2º dado: ${dado2_number}<br>
                     Você ganhou essa rodada - Seu saldo de balas: ${balas}`;
+                    lista_numsorte.push(numsorte);
+                    lista_ndoissorte.push(ndoissorte);
+                    lista_ntressorte.push(ntressorte);
+                    lista_dado1.push(dado1_number);
+                    lista_dado2.push(dado2_number);
+                    lista_balas.push(balas);
                 }else{
                     balas = balas - acumulado;
-                    div_msg.innerHTML += `<br><br>Número sorteado do 1º dado: ${dado1_number} - Número sorteado do 2º dado: ${dado2_number}<br>
+                    div_msg.innerHTML += `<h4>${index}º sorteio:</h4>
+                    Seus números da sorte: ${numsorte}, ${ndoissorte} e ${ntressorte}.<br> 
+                    Número sorteado do 1º dado: ${dado1_number} - Número sorteado do 2º dado: ${dado2_number}<br>
                     Você perdeu essa rodada - Seu saldo de balas: ${balas}`;
+                    lista_numsorte.push(numsorte);
+                    lista_ndoissorte.push(ndoissorte);
+                    lista_ntressorte.push(ntressorte);
+                    lista_dado1.push(dado1_number);
+                    lista_dado2.push(dado2_number);
+                    lista_balas.push(balas);
                 }
             }
             if(balas == 0){
@@ -88,6 +136,60 @@
                 div_msg.innerHTML += `<br><br>Parabéns!!!<br> Você terminou com um saldo a receber de ${balas} balas.`;
             }else{
                 div_msg.innerHTML += `<br><br>PERDEU!!!<br> Você está devendo ${balas} balas.`;
+            }
+        }
+    }
+
+    function pesquisar(){
+        var de = Number(input_de.value);
+        var ate = Number(input_ate.value);
+
+        if(lista_numsorte.length < 1){
+            alert('Ainda não houve rodadas');
+        }else if(de <= 0 || ate <= 0){
+            alert('Pesquise por um intervalo válido');
+        }else if(de == '' || ate == ''){
+            alert('Preencha os campos de pesquisa corretamente');
+        }else{
+            div_pesquisa.innerHTML = '';
+            input_de.value = '';
+            input_ate.value = '';
+            div_pesquisa.innerHTML += `<h3>Pesquisa:</h3>`;
+            for(var i = de - 1;i <= ate - 1;i++){
+                if(lista_numsorte[i] == undefined){
+                    div_pesquisa.innerHTML += `<br><br>Não houve rodada ${i + 1}`;
+                }else{
+                    div_pesquisa.innerHTML += `<h4>${i + 1}º sorteio:</h4>
+                    Seus números da sorte: ${lista_numsorte[i]}, ${lista_ndoissorte[i]} 
+                    e ${lista_ntressorte[i]}.<br> 
+                    Número sorteado do 1º dado: ${lista_dado1[i]} - Número sorteado do 2º dado: ${lista_dado2[i]}<br>
+                    Você perdeu essa rodada - Seu saldo de balas: ${lista_balas[i]}`;
+                }
+            }
+        }
+    }
+
+    function pesquisar_dado(){
+        var pdado = Number(input_pdado.value);
+        if(pdado <= 0 || pdado == ''){
+            alert('Preencha o campo de pesquisa do dado corretamente');
+        }else{
+            div_pesquisa.innerHTML = '';
+            input_pdado.value = '';
+
+            var encontrado = false;
+            for(var j = 0; j < lista_numsorte.length; j++){
+                if(pdado == lista_dado1[j] || pdado == lista_dado2[j]){
+                    div_pesquisa.innerHTML += `<h4>${j + 1}º sorteio:</h4>
+                    Seus números da sorte: ${lista_numsorte[j]}, ${lista_ndoissorte[j]} 
+                    e ${lista_ntressorte[j]}.<br> 
+                    Número sorteado do 1º dado: ${lista_dado1[j]} - Número sorteado do 2º dado: ${lista_dado2[j]}<br>
+                    Você perdeu essa rodada - Seu saldo de balas: ${lista_balas[j]}`;
+                    encontrado = true;
+                }
+            }
+            if(encontrado == false){
+                div_pesquisa.innerHTML = `<br>Não houve dado sorteado no valor ${pdado}`;
             }
         }
     }
